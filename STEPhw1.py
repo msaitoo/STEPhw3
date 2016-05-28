@@ -1,5 +1,10 @@
 import numpy as np
-dictionary = '/usr/share/dict/words'
+dictionary = open('/usr/share/dict/words', 'r')
 
-def anagram (a):
-    
+'''
+Generates the longest word from 16 characters given.
+'''
+print ("Give 16 characters separated by comma")
+characters = raw_input()
+
+def anagram (x):
