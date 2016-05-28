@@ -1,3 +1,5 @@
 import numpy as np
-open('/usr/share/dict/words')
-print '/usr/share/dict/words'
+dictionary = '/usr/share/dict/words'
+
+def anagram (a):
+    
