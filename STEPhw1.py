@@ -11,11 +11,11 @@ let = raw_input()
 ans = []
 
 for w in word:
-    if all(i in w for i in let):
+    if any(i in w for i in let):
         #need to solve:
         #1. exclude the ones with non-given letters
         #2. consider duplicate letters
-        #3. don't have to use all the letters given
+        #3. capitalised words... :(
         ans.append(w)
 
-#print max(ans, key=len)
+print max(ans, key=len)
