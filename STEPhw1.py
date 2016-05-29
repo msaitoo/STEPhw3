@@ -12,8 +12,7 @@ ans = []
 testset = set(charac)
 
 for w in word:
-    ##some code here
-        ans.append(w)
+    #some code here
+            ans.append(w)
 
-ans.sort(key=lambda wd: -len(wd))
-#print ans[0]
+#print max(ans, key=len)
