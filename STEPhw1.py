@@ -1,4 +1,3 @@
-
 dictionary = open('/usr/share/dict/words', 'r')
 word = dictionary.readlines()
 
@@ -9,13 +8,19 @@ print ("Give 16 letters without space/comma/etc between them")
 let = raw_input()
 
 ans = []
-
 for w in word:
-    if any(i in w for i in let):
-        #need to solve:
-        #1. exclude the ones with non-given letters
+    w = w.rstrip("\n")
+    sample = []
+    for i in range(len(w)):
+        if len(w) <= len(let) and any(w[i] == x for x in let):
+            sample.append(w)
+        if (len(sample) == len(w)):
+            ans.append(w)
+            
+#need to solve:
+        #1. exclude the ones with non-given letters: CHECK
         #2. consider duplicate letters
         #3. capitalised words... :(
-        ans.append(w)
+        #4. efficiency orz
 
 print max(ans, key=len)
