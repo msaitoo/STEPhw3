@@ -12,7 +12,7 @@ for w in word:
     w = w.rstrip("\n")
     sample = []
     for i in range(len(w)):
-        if len(w) <= len(let) and any(w[i] == x for x in let):
+        if len(w) <= len(let) and any(w[i] == x for x in let):  #Better way to do this?
             sample.append(w)
         if (len(sample) == len(w)):
             ans.append(w)
