@@ -23,7 +23,7 @@ for w in word:
             elif w[i] == let[x]:        #lower case words
                 sample.append(x)
                 let.remove(let[x])
-                break
+                break 
         if len(w) == len(sample):       #checks if the word is made up of let
             ans.append(w)
 answer = max(ans, key=len)              #finds the longest word
@@ -34,3 +34,6 @@ took = end - start
 print ('''
 The longest word generated is [{}] with number of letters {}.
 Took {} sec.'''.format(answer, len(answer), took))
+
+#possible improvements:
+  #break as soon as no x matches i so that it doesn't have to check all the letters.
