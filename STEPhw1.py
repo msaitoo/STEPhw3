@@ -29,7 +29,7 @@ for w in word:
 answer = max(ans, key=len)              #finds the longest word
 
 end = time.time()                       #end time
-took = end - start
+took = end - start                      #currently very slow :(
 
 print ('''
 The longest word generated is [{}] with number of letters {}.
