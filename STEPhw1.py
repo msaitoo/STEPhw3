@@ -1,5 +1,6 @@
 dictionary = open('/usr/share/dict/words', 'r')
 word = dictionary.readlines()
+import time
 
 '''
 Generates the longest word from letters given.
@@ -8,6 +9,7 @@ print ("Give letters separated by comma")
 letter = raw_input()
 
 ans = []
+start = time.time()                     #start time
 for w in word:
     w = w.rstrip("\n")                  #takes \n out
     sample = []
@@ -24,10 +26,11 @@ for w in word:
                 break
         if len(w) == len(sample):       #checks if the word is made up of let
             ans.append(w)
-
-#Problem: QUITE SLOW :(
-
 answer = max(ans, key=len)              #finds the longest word
+
+end = time.time()                       #end time
+took = end - start
+
 print ('''
 The longest word generated is [{}] with number of letters {}.
-'''.format(answer, len(answer)))
+Took {} sec.'''.format(answer, len(answer), took))
