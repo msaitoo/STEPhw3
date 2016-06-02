@@ -24,9 +24,9 @@ for w in word:
                 sample.append(x)
                 let.remove(let[x])
                 break
-        if len(sample) != i+1:
+        if len(sample) != i+1:          #breaks if one letter doesn't match
             break
-        elif len(w) == len(sample):       #checks if the word is made up of let
+        if len(w) == len(sample):       #checks if the word is made up of let
             ans.append(w)
 answer = max(ans, key=len)              #finds the longest word
 
