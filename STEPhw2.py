@@ -28,3 +28,9 @@ for i in range(n):
 end = time.time()
 print "time: %.6f sec" % (end - begin)
 
+total = 0
+for i in xrange(n):
+    for j in xrange(n):
+        #print c[i,j]
+        total += c[i,j]
+print "sum: %.6f" % total
