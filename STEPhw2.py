@@ -74,10 +74,10 @@ def graph(x):
     ax.xaxis.set_ticks_position('bottom')
     
     ax2 = pyplot.subplot2grid((13,7), (0,5), rowspan=6, colspan = 3) #Square graph
-    ax2.plot(X**2,Y)
+    ax2.plot(X**3,Y)
     ax2.get_xaxis().set_ticks([])
     ax2.get_yaxis().set_ticks([])
-    ax2.set_xlabel('$\mathrm{N^2}$', fontsize=20)
+    ax2.set_xlabel('$\mathrm{N^3}$', fontsize=20)
     
     ax3 = pyplot.subplot2grid((13,7), (7,5), rowspan=6, colspan = 3) #Log graph
     ax3.plot(X*numpy.log(X),Y)
