@@ -63,7 +63,8 @@ def graph(x):
     for y in range(x):                                      #Time for each N
         t = matrix(y)[1]
         X[y], Y[y] = y, t
-    pyplot.figure(figsize=(13,8)); ax = pyplot.subplot(121) #Main graph
+    pyplot.figure(figsize=(13,8))
+    ax = pyplot.subplot2grid((13,7), (0,0), rowspan=13, colspan = 4) #Main graph
     ax.plot(X,Y)
     ax.set_xlabel('$\mathrm{Dimension (N)}$', fontsize=30)
     ax.set_ylabel('$\mathrm{Time}$', fontsize=30)
@@ -72,17 +73,17 @@ def graph(x):
     ax.yaxis.set_ticks_position('left')
     ax.xaxis.set_ticks_position('bottom')
     
-    ax2 = pyplot.subplot(233)                               #Square graph
+    ax2 = pyplot.subplot2grid((13,7), (0,5), rowspan=6, colspan = 3) #Square graph
     ax2.plot(X**2,Y)
     ax2.get_xaxis().set_ticks([])
     ax2.get_yaxis().set_ticks([])
-    ax2.set_ylabel('$\mathrm{x-axis:N^2}$', fontsize=20)
+    ax2.set_xlabel('$\mathrm{N^2}$', fontsize=20)
     
-    ax3 = pyplot.subplot(236)                               #Log graph
+    ax3 = pyplot.subplot2grid((13,7), (7,5), rowspan=6, colspan = 3) #Log graph
     ax3.plot(X*numpy.log(X),Y)
     ax3.get_xaxis().set_ticks([])
     ax3.get_yaxis().set_ticks([])
-    ax3.set_ylabel('$\mathrm{x-axis:Nlog(N)}$', fontsize=20)
+    ax3.set_xlabel('$\mathrm{Nlog(N)}$', fontsize=20)
     
     #ax.set_title('Matrix multiplication: process time', fontsize=20)
     return pyplot.show()
