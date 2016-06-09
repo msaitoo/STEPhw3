@@ -63,6 +63,7 @@ def graph(x):
     for y in range(x):                                      #Time for each N
         t = matrix(y)[1]
         X[y], Y[y] = y, t
+    
     pyplot.figure(figsize=(13,8))
     ax = pyplot.subplot2grid((13,7), (0,0), rowspan=13, colspan = 4) #Main graph
     ax.plot(X,Y)
@@ -73,7 +74,7 @@ def graph(x):
     ax.yaxis.set_ticks_position('left')
     ax.xaxis.set_ticks_position('bottom')
     
-    ax2 = pyplot.subplot2grid((13,7), (0,5), rowspan=6, colspan = 3) #Square graph
+    ax2 = pyplot.subplot2grid((13,7), (0,5), rowspan=6, colspan = 3) #N^3 graph
     ax2.plot(X**3,Y)
     ax2.get_xaxis().set_ticks([])
     ax2.get_yaxis().set_ticks([])
@@ -85,5 +86,4 @@ def graph(x):
     ax3.get_yaxis().set_ticks([])
     ax3.set_xlabel('$\mathrm{Nlog(N)}$', fontsize=20)
     
-    #ax.set_title('Matrix multiplication: process time', fontsize=20)
     return pyplot.show()
