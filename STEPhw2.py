@@ -76,13 +76,13 @@ def graph(x):
     ax2.plot(X**2,Y)
     ax2.get_xaxis().set_ticks([])
     ax2.get_yaxis().set_ticks([])
-    ax2.set_ylabel('$\mathrm{N^2}$', fontsize=20)
+    ax2.set_ylabel('$\mathrm{x-axis:N^2}$', fontsize=20)
     
     ax3 = pyplot.subplot(236)                               #Log graph
     ax3.plot(X*numpy.log(X),Y)
     ax3.get_xaxis().set_ticks([])
     ax3.get_yaxis().set_ticks([])
-    ax3.set_ylabel('$\mathrm{Nlog(N)}$', fontsize=20)
+    ax3.set_ylabel('$\mathrm{x-axis:Nlog(N)}$', fontsize=20)
     
     #ax.set_title('Matrix multiplication: process time', fontsize=20)
     return pyplot.show()
