@@ -20,9 +20,6 @@ def initiate(z):
             c[i,j] = 0
     return (a,b,c)
 
-#Initiate matrices with given dimension.
-n       = int(sys.argv[1])
-
 def matrix(q):
     '''
     Multiplies two square matrices.
@@ -44,6 +41,7 @@ def matrix(q):
     return (c,t)
 
 #Result of multiplication
+n = int(sys.argv[1])
 c = matrix(n)[0]
 print "time: %.6f sec" % (matrix(n)[1])
 
@@ -57,16 +55,18 @@ print "sum: %.6f" % total
 
 ###########################Graphing###########################
 def graph(x):
-    pyplot.figure()
-    pyplot.title("time vs N")
-    pyplot.ylabel('time')
-    pyplot.xlabel('N')
+    x = x+1
+    pyplot.figure(); ax = pyplot.subplot()
     X, Y = numpy.zeros(x), numpy.zeros(x)
-    
     for y in range(x):
         t = matrix(y)[1]
         X[y], Y[y] = y, t
-    
-    pyplot.plot(X,Y)
-    pyplot.tight_layout()
+    ax.plot(X,Y)
+    ax.set_xlabel('$\mathrm{Dimension (N)}$', fontsize=20)
+    ax.set_ylabel('$\mathrm{Time}$', fontsize=20)
+    ax.spines['right'].set_visible(False)
+    ax.spines['top'].set_visible(False)
+    ax.yaxis.set_ticks_position('left')
+    ax.xaxis.set_ticks_position('bottom')
+    #ax.set_title('Matrix multiplication: process time', fontsize=20)
     return pyplot.show()
