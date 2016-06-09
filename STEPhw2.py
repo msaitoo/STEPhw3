@@ -4,39 +4,39 @@ if (len(sys.argv) != 2):
     print "usage: python %s N" % sys.argv[0]
     sys.exit()
 
-def initiate(n):
+def initiate(z):
     '''
     Initiates square matrices to be multiplied.
-            n = dimension
+            z = dimension
     '''
-    a = numpy.zeros((n,n))     # Matrix A
-    b = numpy.zeros((n,n))     # Matrix B
-    c = numpy.zeros((n,n))     # Matrix C (result of multiplication)
+    a = numpy.zeros((z,z))     # Matrix A
+    b = numpy.zeros((z,z))     # Matrix B
+    c = numpy.zeros((z,z))     # Matrix C (result of multiplication)
     
-    for i in xrange(n):        #Initialise the matrices to some values.
-        for j in xrange(n):
-            a[i,j] = i * n + j
-            b[i,j] = j * n + i
+    for i in xrange(z):        #Initialise the matrices to some values.
+        for j in xrange(z):
+            a[i,j] = i * z + j
+            b[i,j] = j * z + i
             c[i,j] = 0
     return (a,b,c)
 
 #Initiate matrices with given dimension.
 n       = int(sys.argv[1])
-a, b, c = initiate(n)[0], initiate(n)[1], initiate(n)[2]
 
-def matrix(n):
+def matrix(q):
     '''
     Multiplies two square matrices.
-            n = dimension
+            q = dimension
     Gives:
             c = Resultant matrix
             t = time taken for calculation
     '''
+    a, b, c = initiate(q)[0], initiate(q)[1], initiate(q)[2]
     begin = time.time()                      #Initial time
-    for i in range(n):
-        for j in range(n):
-            elements = numpy.zeros(n)
-            for k in range(n):               #Sigma summation
+    for i in range(q):
+        for j in range(q):
+            elements = numpy.zeros(q)
+            for k in range(q):               #Sigma summation
                 elements[k] = a[i,k]*b[k,j]
             c[i,j] = sum(elements)           #Elements in c
     end = time.time()                        #End time
@@ -56,30 +56,17 @@ for i in xrange(n):
 print "sum: %.6f" % total
 
 ###########################Graphing###########################
-print "Would you like to graph the relation between N and time? Say yes!"
-ans1 = raw_input()
-if ans1 == 'yes!':
-    print "Max dimension, N, to be graphed (integer please):"
-    ans2 = int(raw_input())
-elif ans1 == 'yes':
-    print "Not enough enthusiasm mate... but fine, max dimension?"
-    ans2 = int(raw_input())
-else:
-    print "I guess not... bye :p"
-    sys.exit()
-
-pyplot.figure()
-pyplot.title("time vs N")
-pyplot.ylabel('time')
-pyplot.xlabel('N')
-x = ans2
-X, Y = numpy.zeros(x), numpy.zeros(x)
-
-for y in range(x):
-    a, b, c = initiate(y)[0], initiate(y)[1], initiate(y)[2]
-    t = matrix(y)[1]
-    X[y], Y[y] = y, t
-
-pyplot.plot(X,Y)
-pyplot.tight_layout()
-pyplot.show()
+def graph(x):
+    pyplot.figure()
+    pyplot.title("time vs N")
+    pyplot.ylabel('time')
+    pyplot.xlabel('N')
+    X, Y = numpy.zeros(x), numpy.zeros(x)
+    
+    for y in range(x):
+        t = matrix(y)[1]
+        X[y], Y[y] = y, t
+    
+    pyplot.plot(X,Y)
+    pyplot.tight_layout()
+    return pyplot.show()
