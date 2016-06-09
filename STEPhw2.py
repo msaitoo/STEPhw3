@@ -55,14 +55,17 @@ print "sum: %.6f" % total
 
 ###########################Graphing###########################
 def graph(x):
-    x = x+1
+    '''
+    Generates a graph of time as a function of N.
+        x = max dimension to be considered - 1
+    '''
     pyplot.figure(); ax = pyplot.subplot()
-    X, Y = numpy.zeros(x), numpy.zeros(x)
-    for y in range(x):
+    X, Y = numpy.zeros(x), numpy.zeros(x)                   #Values to be plotted
+    for y in range(x):                                      #Time for each N
         t = matrix(y)[1]
         X[y], Y[y] = y, t
     ax.plot(X,Y)
-    ax.set_xlabel('$\mathrm{Dimension (N)}$', fontsize=20)
+    ax.set_xlabel('$\mathrm{Dimension (N)}$', fontsize=20)  #Labels
     ax.set_ylabel('$\mathrm{Time}$', fontsize=20)
     ax.spines['right'].set_visible(False)
     ax.spines['top'].set_visible(False)
