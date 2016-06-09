@@ -61,12 +61,15 @@ ans1 = raw_input()
 if ans1 == 'yes!':
     print "Max dimension, N, to be graphed (integer please):"
     ans2 = int(raw_input())
+elif ans1 == 'yes':
+    print "Not enough enthusiasm mate... but fine, max dimension?"
+    ans2 = int(raw_input())
 else:
     print "I guess not... bye :p"
     sys.exit()
 
 pyplot.figure()
-pyplot.title("Relationship between N and time")
+pyplot.title("time vs N")
 pyplot.ylabel('time')
 pyplot.xlabel('N')
 x = ans2
