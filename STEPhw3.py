@@ -65,32 +65,21 @@ def evaluate1(tokens):
             if tokens[index - 1]['type'] == 'MULTIPLY':
                 a = tokens[index - 2]['number'] * tokens[index]['number']
                 tokens[index] = {'type': 'NUMBER', 'number': a}
-                try:
-                    tokens[index - 1] = tokens[index - 3]
-                    tokens[index - 2] = tokens[index - 3 ]
-                    index = index + 1
-                except IndexError:
-                    tokens[index - 1] = {'type': 'PLUS'}
-                    tokens[index - 2] = {'type': 'PLUS'}
-                    index = index + 1
+                tokens[index - 1] = tokens[index - 3]
+                tokens[index - 2] = tokens[index - 3]
+                index += 1
             if tokens[index - 1]['type'] == 'DIVIDE':
                 a = tokens[index - 2]['number'] / tokens[index]['number']
                 tokens[index] = {'type': 'NUMBER', 'number': a}
-                try:
-                    tokens[index - 1] = tokens[index - 3]
-                    tokens[index - 2] = tokens[index - 3 ]
-                    index = index + 1
-                except IndexError:
-                    tokens[index - 1] = {'type': 'PLUS'}
-                    tokens[index - 2] = {'type': 'PLUS'}
-                    index = index + 1
+                tokens[index - 1] = tokens[index - 3]
+                tokens[index - 2] = tokens[index - 3 ]
+                index += 1
         index += 1
     return tokens
 
 
 def evaluate2(tokens):
     answer = 0
-    #tokens.insert(0, {'type': 'PLUS'}) # Insert a dummy '+' token
     index = 1
     while index < len(tokens):
         if tokens[index]['type'] == 'NUMBER':
