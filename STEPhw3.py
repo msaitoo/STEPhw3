@@ -57,7 +57,7 @@ def tokenize(line):
     return tokens
 
 
-def priority1(tokens):
+def evaluate1(tokens):
     index = 0
     while index < len(tokens):
         if tokens[index]['type'] == 'MULTIPLY':
@@ -87,7 +87,7 @@ def priority1(tokens):
     return tokens
 
 
-def evaluate(tokens):
+def evaluate2(tokens):
     answer = 0
     tokens.insert(0, {'type': 'PLUS'}) # Insert a dummy '+' token
     index = 1
@@ -107,7 +107,7 @@ while True:
     print '> ',
     line = raw_input()
     tokens = tokenize(line)
-    priority = priority1(tokens)
+    simplified = evaluate1(tokens)
     #print priority
-    answer = evaluate(priority)
+    answer = evaluate2(simplified)
     print "answer = %f\n" % answer
