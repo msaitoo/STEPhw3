@@ -1,3 +1,5 @@
+import sys
+
 def readNumber(line, index):
     number = 0
     while index < len(line) and line[index].isdigit():
@@ -26,7 +28,7 @@ def readMinus(line, index):
 def readMultiply(line, index):
     token = {'type': 'MULTIPLY'}
     return token, index + 1
-    
+
 def readDivide(line, index):
     token = {'type': 'DIVIDE'}
     return token, index + 1
@@ -41,9 +43,13 @@ def tokenize(line):
             (token, index) = readPlus(line, index)
         elif line[index] == '-':
             (token, index) = readMinus(line, index)
+        elif line[index] == '*':
+            (token, index) = readMultiply(line, index)
+        elif line[index] == '/':
+            (token, index) = readDivide(line, index)
         else:
             print 'Invalid character found: ' + line[index]
-            exit(1)
+            sys.exit()
         tokens.append(token)
     return tokens
 
@@ -58,6 +64,10 @@ def evaluate(tokens):
                 answer += tokens[index]['number']
             elif tokens[index - 1]['type'] == 'MINUS':
                 answer -= tokens[index]['number']
+            elif tokens[index - 1]['type'] == 'MULTIPLY':
+                answer *= tokens[index]['number']
+            elif tokens[index - 1]['type'] == 'DIVIDE':
+                answer /= tokens[index]['number']
             else:
                 print 'Invalid syntax'
         index += 1
