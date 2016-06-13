@@ -25,13 +25,16 @@ def readMinus(line, index):
     token = {'type': 'MINUS'}
     return token, index + 1
 
+
 def readMultiply(line, index):
     token = {'type': 'MULTIPLY'}
     return token, index + 1
 
+
 def readDivide(line, index):
     token = {'type': 'DIVIDE'}
     return token, index + 1
+
 
 def tokenize(line):
     tokens = []
@@ -54,6 +57,36 @@ def tokenize(line):
     return tokens
 
 
+def priority1(tokens):
+    index = 0
+    while index < len(tokens):
+        if tokens[index]['type'] == 'MULTIPLY':
+            a = tokens[index - 1]['number'] * tokens[index + 1]['number']
+            tokens[index] = {'type': 'NUMBER', 'number': a}
+            try:
+                tokens[index - 1] = tokens[index - 2]
+                tokens[index + 1] = tokens[index + 2]
+                index = index + 1
+            except IndexError:
+                tokens[index - 1] = {'type': 'PLUS'}
+                tokens[index + 1] = {'type': 'PLUS'}
+                index = index + 1
+        elif tokens[index]['type'] == 'DIVIDE':
+            a = tokens[index - 1]['number'] / tokens[index + 1]['number']
+            tokens[index] = {'type': 'NUMBER', 'number': a}
+            try:
+                tokens[index - 1] = tokens[index - 2]
+                tokens[index + 1] = tokens[index + 2]
+                index = index + 1
+            except IndexError:
+                tokens[index - 1] = {'type': 'PLUS'}
+                tokens[index + 1] = {'type': 'PLUS'}
+                index = index + 1
+        else:
+            index = index + 1
+    return tokens
+
+
 def evaluate(tokens):
     answer = 0
     tokens.insert(0, {'type': 'PLUS'}) # Insert a dummy '+' token
@@ -64,10 +97,6 @@ def evaluate(tokens):
                 answer += tokens[index]['number']
             elif tokens[index - 1]['type'] == 'MINUS':
                 answer -= tokens[index]['number']
-            elif tokens[index - 1]['type'] == 'MULTIPLY':
-                answer *= tokens[index]['number']
-            elif tokens[index - 1]['type'] == 'DIVIDE':
-                answer /= tokens[index]['number']
             else:
                 print 'Invalid syntax'
         index += 1
@@ -78,5 +107,7 @@ while True:
     print '> ',
     line = raw_input()
     tokens = tokenize(line)
-    answer = evaluate(tokens)
+    priority = priority1(tokens)
+    #print priority
+    answer = evaluate(priority)
     print "answer = %f\n" % answer
