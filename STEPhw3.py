@@ -58,38 +58,39 @@ def tokenize(line):
 
 
 def evaluate1(tokens):
-    index = 0
+    tokens.insert(0, {'type': 'PLUS'}) # Insert a dummy '+' token
+    index = 1
     while index < len(tokens):
-        if tokens[index]['type'] == 'MULTIPLY':
-            a = tokens[index - 1]['number'] * tokens[index + 1]['number']
-            tokens[index] = {'type': 'NUMBER', 'number': a}
-            try:
-                tokens[index - 1] = tokens[index - 2]
-                tokens[index + 1] = tokens[index + 2]
-                index = index + 1
-            except IndexError:
-                tokens[index - 1] = {'type': 'PLUS'}
-                tokens[index + 1] = {'type': 'PLUS'}
-                index = index + 1
-        elif tokens[index]['type'] == 'DIVIDE':
-            a = tokens[index - 1]['number'] / tokens[index + 1]['number']
-            tokens[index] = {'type': 'NUMBER', 'number': a}
-            try:
-                tokens[index - 1] = tokens[index - 2]
-                tokens[index + 1] = tokens[index + 2]
-                index = index + 1
-            except IndexError:
-                tokens[index - 1] = {'type': 'PLUS'}
-                tokens[index + 1] = {'type': 'PLUS'}
-                index = index + 1
-        else:
-            index = index + 1
+        if tokens[index]['type'] == 'NUMBER':
+            if tokens[index - 1]['type'] == 'MULTIPLY':
+                a = tokens[index - 2]['number'] * tokens[index]['number']
+                tokens[index] = {'type': 'NUMBER', 'number': a}
+                try:
+                    tokens[index - 1] = tokens[index - 3]
+                    tokens[index - 2] = tokens[index - 3 ]
+                    index = index + 1
+                except IndexError:
+                    tokens[index - 1] = {'type': 'PLUS'}
+                    tokens[index - 2] = {'type': 'PLUS'}
+                    index = index + 1
+            if tokens[index - 1]['type'] == 'DIVIDE':
+                a = tokens[index - 2]['number'] / tokens[index]['number']
+                tokens[index] = {'type': 'NUMBER', 'number': a}
+                try:
+                    tokens[index - 1] = tokens[index - 3]
+                    tokens[index - 2] = tokens[index - 3 ]
+                    index = index + 1
+                except IndexError:
+                    tokens[index - 1] = {'type': 'PLUS'}
+                    tokens[index - 2] = {'type': 'PLUS'}
+                    index = index + 1
+        index += 1
     return tokens
 
 
 def evaluate2(tokens):
     answer = 0
-    tokens.insert(0, {'type': 'PLUS'}) # Insert a dummy '+' token
+    #tokens.insert(0, {'type': 'PLUS'}) # Insert a dummy '+' token
     index = 1
     while index < len(tokens):
         if tokens[index]['type'] == 'NUMBER':
@@ -108,6 +109,6 @@ while True:
     line = raw_input()
     tokens = tokenize(line)
     simplified = evaluate1(tokens)
-    #print priority
+    #print simplified
     answer = evaluate2(simplified)
     print "answer = %f\n" % answer
