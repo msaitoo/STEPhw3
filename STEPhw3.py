@@ -111,36 +111,44 @@ def evaluate2(tokens):
     return answer
 
 
-def prioritise(tokens):
-    "Calculates inside of a parenthesis. Priority + 2."
-    index = 1
-    s, e = 0, len(tokens)               #index of start and end of parenthesis
+def parenthesisINDEX(tokens):
+    "Gets index of parenthesis."
+    index = 0
+    s, e = [], []
     while index < len(tokens):
         if tokens[index]['type'] == 'START':
-            s = index
+            s.append(index)
             index += 1
         if tokens[index]['type'] == 'END':
-            e = index
+            e.append(index)
             index += 1
         else:
             index += 1
-    if s >= 2:
-        tok   = tokens[(s+1):e]         #inside the parenthesis
-        calc1 = evaluate1(tok)
-        calc2 = evaluate2(calc1)
-        
-        new   = {'type': 'NUMBER', 'number': calc2}
-        tokens[s] = new                 #Replace () with a single number
-        del tokens[(s+1):(e+1)]
+    return (s, e)
+    
+def parenthesis(tokens):
+    s = parenthesisINDEX(tokens)[0]
+    e = parenthesisINDEX(tokens)[1]
+    if len(s) == 0:
+        tokens = tokens
+    else:
+        while len(s) >= 1:
+            a, b = s[-1], e[0]
+            tok = tokens[(a+1):b]
+            calc1 = evaluate1(tok)
+            calc2 = evaluate2(calc1)
+            new = {'type': 'NUMBER', 'number': calc2}
+            tokens[a] = new
+            del tokens[(a+1):(b+1)]
+            (s, e) = parenthesisINDEX(tokens)
     return tokens
-
 
 while True:
     print '> ',
     line = raw_input()
     tokens     = tokenize(line)
     #print tokens
-    priority   = prioritise(tokens)
+    priority   = parenthesis(tokens)
     #print priority
     simplified = evaluate1(tokens)
     #print simplified
