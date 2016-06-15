@@ -1,7 +1,7 @@
 import sys
 
 def readNumber(line, index):
-    "Identifies numbers in an equation. 1>digit>1"
+    "Identifies numbers in an equation."
     number = 0
     while index < len(line) and line[index].isdigit():
         number  = number * 10 + int(line[index])
@@ -74,8 +74,8 @@ def tokenize(line):
     
 
 def evaluate1(tokens):
-    "Multiplication and division calculations. Priority + 1."
-    tokens.insert(0, {'type': 'PLUS'}) # Insert a dummy '+' token
+    "Multiplication and division calculations."
+    tokens.insert(0, {'type': 'PLUS'}) #Insert a dummy '+' token
     index = 1
     while index < len(tokens):
         if tokens[index]['type'] == 'NUMBER':
@@ -112,7 +112,7 @@ def evaluate2(tokens):
 
 
 def parenthesisINDEX(tokens):
-    "Gets index of parenthesis."
+    "Returns positions of open and close parenthesis."
     index = 0
     s, e = [], []
     while index < len(tokens):
@@ -127,25 +127,27 @@ def parenthesisINDEX(tokens):
     return (s, e)
     
 def parenthesis(tokens):
-    s = parenthesisINDEX(tokens)[0]
-    e = parenthesisINDEX(tokens)[1]
-    if len(s) == 0:
+    "Calculates inside of a parenthesis and gets rid of parenthesis."
+    s, e = parenthesisINDEX(tokens)[0], parenthesisINDEX(tokens)[1]
+    if len(s) == 0:             #No parenthesis
         tokens = tokens
     else:
         while len(s) >= 1:
-            a, b = s[-1], e[0]
-            tok = tokens[(a+1):b]
+            a, b  = s[-1], e[0]
+            tok   = tokens[(a+1):b]
             calc1 = evaluate1(tok)
             calc2 = evaluate2(calc1)
-            new = {'type': 'NUMBER', 'number': calc2}
+            new   = {'type': 'NUMBER', 'number': calc2}
+            
             tokens[a] = new
             del tokens[(a+1):(b+1)]
-            (s, e) = parenthesisINDEX(tokens)
+            (s, e)    = parenthesisINDEX(tokens)
     return tokens
+
 
 while True:
     print '> ',
-    line = raw_input()
+    line       = raw_input()
     tokens     = tokenize(line)
     #print tokens
     priority   = parenthesis(tokens)
