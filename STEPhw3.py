@@ -129,6 +129,9 @@ def parenthesisINDEX(tokens):
 def parenthesis(tokens):
     "Calculates inside of a parenthesis and gets rid of parenthesis."
     s, e = parenthesisINDEX(tokens)[0], parenthesisINDEX(tokens)[1]
+    if len(s) != len(e):
+        print "Invalid use of parenthesis."
+        sys.exit()
     if len(s) == 0:             #No parenthesis
         tokens = tokens
     else:
@@ -149,10 +152,7 @@ while True:
     print '> ',
     line       = raw_input()
     tokens     = tokenize(line)
-    #print tokens
     priority   = parenthesis(tokens)
-    #print priority
     simplified = evaluate1(tokens)
-    #print simplified
     answer     = evaluate2(tokens)
     print "answer = %f\n" % answer
