@@ -36,6 +36,15 @@ def readDivide(line, index):
     return token, index + 1
 
 
+def readStartParenthesis(line, index):
+    token = {'type': 'START'}
+    return token, index + 1
+
+
+def readEndParenthesis(line, index):
+    token = {'type': 'END'}
+    return token, index + 1
+
 def tokenize(line):
     tokens = []
     index = 0
@@ -50,12 +59,16 @@ def tokenize(line):
             (token, index) = readMultiply(line, index)
         elif line[index] == '/':
             (token, index) = readDivide(line, index)
+        elif line[index] == '(':
+            (token, index) = readStartParenthesis(line, index)
+        elif line[index] == ')':
+            (token, index) = readEndParenthesis(line, index)
         else:
             print 'Invalid character found: ' + line[index]
             sys.exit()
         tokens.append(token)
     return tokens
-
+    
 
 def evaluate1(tokens):
     tokens.insert(0, {'type': 'PLUS'}) # Insert a dummy '+' token
@@ -77,7 +90,6 @@ def evaluate1(tokens):
         index += 1
     return tokens
 
-
 def evaluate2(tokens):
     answer = 0
     index = 1
@@ -92,12 +104,38 @@ def evaluate2(tokens):
         index += 1
     return answer
 
+def prioritise(tokens):
+    index = 1
+    s, e = 0, len(tokens)
+    while index < len(tokens):
+        if tokens[index]['type'] == 'START':
+            s = index
+            index += 1
+        if tokens[index]['type'] == 'END':
+            e = index
+            index += 1
+        else:
+            index += 1
+    if s >= 2:
+        tok = tokens[(s+1):e]
+        calc1 = evaluate1(tok)
+        calc2 = evaluate2(calc1)
+        new = {'type': 'NUMBER', 'number': calc2}
+        tokens[s] = new
+        del tokens[(s+1):(e+1)]
+    else:
+        tokens = tokens
+    return tokens
+
 
 while True:
     print '> ',
     line = raw_input()
     tokens = tokenize(line)
+    #print tokens
+    priority = prioritise(tokens)
+    #print priority
     simplified = evaluate1(tokens)
     #print simplified
-    answer = evaluate2(simplified)
+    answer = evaluate2(tokens)
     print "answer = %f\n" % answer
