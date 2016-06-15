@@ -1,51 +1,54 @@
 import sys
 
 def readNumber(line, index):
+    "Identifies numbers in an equation. 1>digit>1"
     number = 0
     while index < len(line) and line[index].isdigit():
-        number = number * 10 + int(line[index])
-        index += 1
-    if index < len(line) and line[index] == '.':
-        index += 1
-        keta = 0.1
+        number  = number * 10 + int(line[index])
+        index  += 1
+    if index    < len(line) and line[index] == '.':
+        index  += 1
+        keta    = 0.1
         while index < len(line) and line[index].isdigit():
             number += int(line[index]) * keta
-            keta *= 0.1
-            index += 1
+            keta   *= 0.1
+            index  += 1
     token = {'type': 'NUMBER', 'number': number}
     return token, index
 
-
 def readPlus(line, index):
+    "Identifies addition signs."
     token = {'type': 'PLUS'}
     return token, index + 1
 
-
 def readMinus(line, index):
+    "Identifies subtraction signs."
     token = {'type': 'MINUS'}
     return token, index + 1
 
-
 def readMultiply(line, index):
+    "Identifies multiplication signs."
     token = {'type': 'MULTIPLY'}
     return token, index + 1
 
-
 def readDivide(line, index):
+    "Identifies division signs."
     token = {'type': 'DIVIDE'}
     return token, index + 1
 
-
 def readStartParenthesis(line, index):
+    "Identifies start of a parenthesis."
     token = {'type': 'START'}
     return token, index + 1
 
-
 def readEndParenthesis(line, index):
+    "Identifies end of a parenthesis."
     token = {'type': 'END'}
     return token, index + 1
 
+
 def tokenize(line):
+    "Make tokens of an equation given."
     tokens = []
     index = 0
     while index < len(line):
@@ -71,6 +74,7 @@ def tokenize(line):
     
 
 def evaluate1(tokens):
+    "Multiplication and division calculations. Priority + 1."
     tokens.insert(0, {'type': 'PLUS'}) # Insert a dummy '+' token
     index = 1
     while index < len(tokens):
@@ -85,17 +89,19 @@ def evaluate1(tokens):
                 a = tokens[index - 2]['number'] / tokens[index]['number']
                 tokens[index] = {'type': 'NUMBER', 'number': a}
                 tokens[index - 1] = tokens[index - 3]
-                tokens[index - 2] = tokens[index - 3 ]
+                tokens[index - 2] = tokens[index - 3]
                 index += 1
         index += 1
     return tokens
 
+
 def evaluate2(tokens):
+    "Addition and subtraction calculations."
     answer = 0
-    index = 1
+    index  = 1
     while index < len(tokens):
         if tokens[index]['type'] == 'NUMBER':
-            if tokens[index - 1]['type'] == 'PLUS':
+            if tokens[index - 1]['type']   == 'PLUS':
                 answer += tokens[index]['number']
             elif tokens[index - 1]['type'] == 'MINUS':
                 answer -= tokens[index]['number']
@@ -104,9 +110,11 @@ def evaluate2(tokens):
         index += 1
     return answer
 
+
 def prioritise(tokens):
+    "Calculates inside of a parenthesis. Priority + 2."
     index = 1
-    s, e = 0, len(tokens)
+    s, e = 0, len(tokens)               #index of start and end of parenthesis
     while index < len(tokens):
         if tokens[index]['type'] == 'START':
             s = index
@@ -117,25 +125,24 @@ def prioritise(tokens):
         else:
             index += 1
     if s >= 2:
-        tok = tokens[(s+1):e]
+        tok   = tokens[(s+1):e]         #inside the parenthesis
         calc1 = evaluate1(tok)
         calc2 = evaluate2(calc1)
-        new = {'type': 'NUMBER', 'number': calc2}
-        tokens[s] = new
+        
+        new   = {'type': 'NUMBER', 'number': calc2}
+        tokens[s] = new                 #Replace () with a single number
         del tokens[(s+1):(e+1)]
-    else:
-        tokens = tokens
     return tokens
 
 
 while True:
     print '> ',
     line = raw_input()
-    tokens = tokenize(line)
+    tokens     = tokenize(line)
     #print tokens
-    priority = prioritise(tokens)
+    priority   = prioritise(tokens)
     #print priority
     simplified = evaluate1(tokens)
     #print simplified
-    answer = evaluate2(tokens)
+    answer     = evaluate2(tokens)
     print "answer = %f\n" % answer
