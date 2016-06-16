@@ -149,10 +149,12 @@ def parenthesis(tokens):
             (start, end) = parenthesisINDEX(tokens)             #Re-index ()
     return tokens
 
+
 def evaluate(tokens):
     kakko      = parenthesis(tokens)                            #Get rid of parenthesis
     simplified = MultiplyAndDivide(kakko)                       #Get rid of * and /
     return PlusAndMinus(simplified)
+
 
 while True:
     print '> ',
