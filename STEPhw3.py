@@ -132,17 +132,14 @@ def MultiplyAndDivide(tokens):
 
 def parenthesisINDEX(tokens):
     "Returns lists of indices of start and end of parenthesis."
-    index      = 0
+    #index      = 0
     start, end = [], []                                         #List indices of ( and )
-    while index < len(tokens):
+    for index in range (len(tokens)):
         if tokens[index]['type'] == 'START':
             start.append(index)
-            index += 1
-        elif tokens[index]['type'] == 'END':
+            #index += 1
+        if tokens[index]['type'] == 'END':
             end.append(index)
-            index += 1
-        else:
-            index += 1
     return (start, end)
 
 def parenthesis(tokens):
@@ -154,7 +151,7 @@ def parenthesis(tokens):
     if len(start) == 0:                                         #No parenthesis
         tokens = tokens
     else:
-        while len(start) >= 1:                                  #Until no ()
+        while len(start) >= 1:                                  #Until no () left
             if start[-1]   <= end[0]:                           #((( ))) form
                 op, cl = start[-1], end[0]
             elif start[-1] >= end[0]:                           #( )*( ) form
@@ -170,14 +167,17 @@ def parenthesis(tokens):
 
 
 def evaluate(tokens):
-    kakko      = parenthesis(tokens)                            #Get rid of parenthesis
-    simplified = MultiplyAndDivide(kakko)                       #Get rid of * and /
-    return PlusAndMinus(simplified)
+    if tokens[0] != {'type': 'START'}:
+        tokens.insert(0, {'type': 'START'})
+        tokens.insert(len(tokens), {'type': 'END'})
+    return parenthesis(tokens)
 
 
 while True:
     print '> ',
     line       = raw_input()
     tokens     = tokenize(line)
+    #print tokens
     answer     = evaluate(tokens)
-    print "answer = %f\n" % answer
+    #print "answer = %f\n" % answer
+    #print answer
