@@ -169,6 +169,7 @@ def parenthesis(tokens):
 
 
 def evaluate(tokens):
+    "Uses other modules and evaluates equation."
     if tokens[0] != {'type': 'START'}:                          #() over all equation
         tokens.insert(0, {'type': 'START'})
         tokens.insert(len(tokens), {'type': 'END'})
