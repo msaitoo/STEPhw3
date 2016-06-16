@@ -71,23 +71,23 @@ def tokenize(line):
             sys.exit()
         tokens.append(token)
     return tokens
-    
 
-def evaluate1(tokens):
+
+def MultiplyAndDivide(tokens):
     "Multiplication and division calculations."
     tokens.insert(0, {'type': 'PLUS'}) #Insert a dummy '+' token
     index = 1
     while index < len(tokens):
         if tokens[index]['type'] == 'NUMBER':
             if tokens[index - 1]['type'] == 'MULTIPLY':
-                a = tokens[index - 2]['number'] * tokens[index]['number']
-                tokens[index] = {'type': 'NUMBER', 'number': a}
+                result = tokens[index - 2]['number'] * tokens[index]['number']
+                tokens[index] = {'type': 'NUMBER', 'number': result}
                 tokens[index - 1] = tokens[index - 3]
                 tokens[index - 2] = tokens[index - 3]
                 index += 1
             if tokens[index - 1]['type'] == 'DIVIDE':
-                a = tokens[index - 2]['number'] / tokens[index]['number']
-                tokens[index] = {'type': 'NUMBER', 'number': a}
+                result = tokens[index - 2]['number'] / tokens[index]['number']
+                tokens[index] = {'type': 'NUMBER', 'number': result}
                 tokens[index - 1] = tokens[index - 3]
                 tokens[index - 2] = tokens[index - 3]
                 index += 1
@@ -95,7 +95,7 @@ def evaluate1(tokens):
     return tokens
 
 
-def evaluate2(tokens):
+def PlusAndMinus(tokens):
     "Addition and subtraction calculations."
     answer = 0
     index  = 1
@@ -114,45 +114,53 @@ def evaluate2(tokens):
 def parenthesisINDEX(tokens):
     "Returns positions of open and close parenthesis."
     index = 0
-    s, e = [], []
+    start, end = [], []
     while index < len(tokens):
         if tokens[index]['type'] == 'START':
-            s.append(index)
+            token = index
+            start.append(token)
             index += 1
         if tokens[index]['type'] == 'END':
-            e.append(index)
+            token = index
+            end.append(token)
             index += 1
         else:
             index += 1
-    return (s, e)
-    
+    return (start, end)
+
 def parenthesis(tokens):
     "Calculates inside of a parenthesis and gets rid of parenthesis."
-    s, e = parenthesisINDEX(tokens)[0], parenthesisINDEX(tokens)[1]
-    if len(s) != len(e):
+    start, end = parenthesisINDEX(tokens)[0], parenthesisINDEX(tokens)[1]
+    if len(start) != len(end):
         print "Invalid use of parenthesis."
         sys.exit()
-    if len(s) == 0:             #No parenthesis
+    if len(start) == 0:             #No parenthesis
         tokens = tokens
     else:
-        while len(s) >= 1:
-            a, b  = s[-1], e[0]
-            tok   = tokens[(a+1):b]
-            calc1 = evaluate1(tok)
-            calc2 = evaluate2(calc1)
-            new   = {'type': 'NUMBER', 'number': calc2}
+        while len(start) >= 1:
+            if start[-1] <= end[0]:
+                op, cl  = start[-1], end[0]
+            elif start[-1] >= end[0]:
+                op, cl = start[0], end[0]
+            tok     = tokens[(op+1):cl]
+            calc1   = MultiplyAndDivide(tok)
+            calc2   = PlusAndMinus(calc1)
+            new     = {'type': 'NUMBER', 'number': calc2}
             
-            tokens[a] = new
-            del tokens[(a+1):(b+1)]
-            (s, e)    = parenthesisINDEX(tokens)
+            tokens[op] = new
+            del tokens[(op+1):(cl+1)]
+            #print tokens
+            (start, end)    = parenthesisINDEX(tokens)
     return tokens
 
+def evaluate(tokens):
+    kakko = parenthesis(tokens)
+    simplified = MultiplyAndDivide(kakko)
+    return PlusAndMinus(simplified)
 
 while True:
     print '> ',
     line       = raw_input()
     tokens     = tokenize(line)
-    priority   = parenthesis(tokens)
-    simplified = evaluate1(tokens)
-    answer     = evaluate2(tokens)
+    answer     = evaluate(tokens)
     print "answer = %f\n" % answer
