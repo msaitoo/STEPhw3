@@ -46,6 +46,10 @@ def readEndParenthesis(line, index):
     token = {'type': 'END'}
     return token, index + 1
 
+def readPower(line, index):
+    "Identifies powers on a number."
+    token = {'type': 'POWER'}
+    return token, index + 1
 
 def tokenize(line):
     "Make tokens of an equation given."
@@ -66,10 +70,25 @@ def tokenize(line):
             (token, index) = readStartParenthesis(line, index)
         elif line[index] == ')':
             (token, index) = readEndParenthesis(line, index)
+        elif line[index] == '^':
+            (token, index) = readPower(line, index)
         else:
             print 'Invalid character found: ' + line[index]
             sys.exit()
         tokens.append(token)
+    return tokens
+
+
+def Power(tokens):
+    "Power calculations."
+    index = 0
+    while index < len(tokens)-1:
+        if tokens[index]['type'] == 'NUMBER':
+            if tokens[index + 1]['type']   == 'POWER':
+                tokens[index]['number'] = tokens[index]['number']**tokens[index + 2]['number']
+                tokens[index + 1] = {'type': 'PLUS'}
+                tokens[index + 2] = {'type': 'PLUS'}
+        index += 1
     return tokens
 
 
