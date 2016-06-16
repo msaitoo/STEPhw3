@@ -103,8 +103,8 @@ def PlusAndMinus(tokens):
                 answer += tokens[index]['number']
             elif tokens[index - 1]['type'] == 'MINUS':
                 answer -= tokens[index]['number']
-            #else:
-                #print 'Invalid syntax'
+            else:
+                print 'Invalid syntax'
         index += 1
     return answer
 
@@ -132,7 +132,6 @@ def MultiplyAndDivide(tokens):
 
 def parenthesisINDEX(tokens):
     "Returns lists of indices of start and end of parenthesis."
-    #index      = 0
     start, end = [], []                                         #List indices of ( and )
     for index in range (len(tokens)):
         if tokens[index]['type'] == 'START':
@@ -163,21 +162,23 @@ def parenthesis(tokens):
             tokens[op] = inside                                 #Replace with answer
             del tokens[(op+1):(cl+1)]                           #Delete used tokens
             (start, end) = parenthesisINDEX(tokens)             #Re-index ()
+    if len(tokens) >= 2:
+        muldiv = MultiplyAndDivide(tokens)
+        tokens = PlusAndMinus(muldiv)
     return tokens
 
 
 def evaluate(tokens):
-    if tokens[0] != {'type': 'START'}:
+    if tokens[0] != {'type': 'START'}:                          #() over all equation
         tokens.insert(0, {'type': 'START'})
         tokens.insert(len(tokens), {'type': 'END'})
-    return parenthesis(tokens)
+    result = parenthesis(tokens)
+    return result[0]['number']
 
 
 while True:
     print '> ',
     line       = raw_input()
     tokens     = tokenize(line)
-    #print tokens
     answer     = evaluate(tokens)
-    #print "answer = %f\n" % answer
-    #print answer
+    print "answer = %f\n" % answer
