@@ -75,6 +75,7 @@ def tokenize(line):
 
 def PlusAndMinus(tokens):
     "Addition and subtraction calculations."
+    tokens.insert(0, {'type': 'PLUS'})                         #Insert a dummy '+' token
     answer = 0
     index  = 1
     while index < len(tokens):
@@ -83,29 +84,28 @@ def PlusAndMinus(tokens):
                 answer += tokens[index]['number']
             elif tokens[index - 1]['type'] == 'MINUS':
                 answer -= tokens[index]['number']
-            else:
-                print 'Invalid syntax'
+            #else:
+                #print 'Invalid syntax'
         index += 1
     return answer
 
 
 def MultiplyAndDivide(tokens):
     "Multiplication and division calculations."
-    tokens.insert(0, {'type': 'PLUS'})                         #Insert a dummy '+' token
     index = 1
     while index < len(tokens):
         if tokens[index]['type'] == 'NUMBER':
             if tokens[index - 1]['type'] == 'MULTIPLY':
                 result = tokens[index - 2]['number'] * tokens[index]['number']
-                tokens[index]     = {'type': 'NUMBER', 'number': result}
-                tokens[index - 1] = tokens[index - 3]          #Replace used tokens with signs
-                tokens[index - 2] = tokens[index - 3]
+                tokens[index - 2] = {'type': 'NUMBER', 'number': result}
+                tokens[index - 1] = {'type': 'PLUS'}
+                tokens[index]     = {'type': 'PLUS'}
                 index += 1
             if tokens[index - 1]['type'] == 'DIVIDE':
                 result = tokens[index - 2]['number'] / tokens[index]['number']
-                tokens[index]  = {'type': 'NUMBER', 'number': result}
-                tokens[index - 1] = tokens[index - 3]
-                tokens[index - 2] = tokens[index - 3]
+                tokens[index - 2] = {'type': 'NUMBER', 'number': result}
+                tokens[index - 1] = {'type': 'PLUS'}
+                tokens[index]     = {'type': 'PLUS'}
                 index += 1
         index += 1
     return tokens
@@ -119,7 +119,7 @@ def parenthesisINDEX(tokens):
         if tokens[index]['type'] == 'START':
             start.append(index)
             index += 1
-        if tokens[index]['type'] == 'END':
+        elif tokens[index]['type'] == 'END':
             end.append(index)
             index += 1
         else:
