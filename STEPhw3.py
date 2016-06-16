@@ -73,28 +73,6 @@ def tokenize(line):
     return tokens
 
 
-def MultiplyAndDivide(tokens):
-    "Multiplication and division calculations."
-    tokens.insert(0, {'type': 'PLUS'}) #Insert a dummy '+' token
-    index = 1
-    while index < len(tokens):
-        if tokens[index]['type'] == 'NUMBER':
-            if tokens[index - 1]['type'] == 'MULTIPLY':
-                result = tokens[index - 2]['number'] * tokens[index]['number']
-                tokens[index] = {'type': 'NUMBER', 'number': result}
-                tokens[index - 1] = tokens[index - 3]
-                tokens[index - 2] = tokens[index - 3]
-                index += 1
-            if tokens[index - 1]['type'] == 'DIVIDE':
-                result = tokens[index - 2]['number'] / tokens[index]['number']
-                tokens[index] = {'type': 'NUMBER', 'number': result}
-                tokens[index - 1] = tokens[index - 3]
-                tokens[index - 2] = tokens[index - 3]
-                index += 1
-        index += 1
-    return tokens
-
-
 def PlusAndMinus(tokens):
     "Addition and subtraction calculations."
     answer = 0
@@ -111,18 +89,38 @@ def PlusAndMinus(tokens):
     return answer
 
 
+def MultiplyAndDivide(tokens):
+    "Multiplication and division calculations."
+    tokens.insert(0, {'type': 'PLUS'})                         #Insert a dummy '+' token
+    index = 1
+    while index < len(tokens):
+        if tokens[index]['type'] == 'NUMBER':
+            if tokens[index - 1]['type'] == 'MULTIPLY':
+                result = tokens[index - 2]['number'] * tokens[index]['number']
+                tokens[index]     = {'type': 'NUMBER', 'number': result}
+                tokens[index - 1] = tokens[index - 3]          #Replace used tokens with signs
+                tokens[index - 2] = tokens[index - 3]
+                index += 1
+            if tokens[index - 1]['type'] == 'DIVIDE':
+                result = tokens[index - 2]['number'] / tokens[index]['number']
+                tokens[index]  = {'type': 'NUMBER', 'number': result}
+                tokens[index - 1] = tokens[index - 3]
+                tokens[index - 2] = tokens[index - 3]
+                index += 1
+        index += 1
+    return tokens
+
+
 def parenthesisINDEX(tokens):
-    "Returns positions of open and close parenthesis."
-    index = 0
-    start, end = [], []
+    "Returns lists of indices of start and end of parenthesis."
+    index      = 0
+    start, end = [], []                                         #List indices of ( and )
     while index < len(tokens):
         if tokens[index]['type'] == 'START':
-            token = index
-            start.append(token)
+            start.append(index)
             index += 1
         if tokens[index]['type'] == 'END':
-            token = index
-            end.append(token)
+            end.append(index)
             index += 1
         else:
             index += 1
@@ -134,28 +132,26 @@ def parenthesis(tokens):
     if len(start) != len(end):
         print "Invalid use of parenthesis."
         sys.exit()
-    if len(start) == 0:             #No parenthesis
+    if len(start) == 0:                                         #No parenthesis
         tokens = tokens
     else:
-        while len(start) >= 1:
-            if start[-1] <= end[0]:
-                op, cl  = start[-1], end[0]
-            elif start[-1] >= end[0]:
+        while len(start) >= 1:                                  #Until no ()
+            if start[-1]   <= end[0]:                           #((( ))) form
+                op, cl = start[-1], end[0]
+            elif start[-1] >= end[0]:                           #( )*( ) form
                 op, cl = start[0], end[0]
             tok     = tokens[(op+1):cl]
-            calc1   = MultiplyAndDivide(tok)
-            calc2   = PlusAndMinus(calc1)
-            new     = {'type': 'NUMBER', 'number': calc2}
-            
-            tokens[op] = new
-            del tokens[(op+1):(cl+1)]
-            #print tokens
-            (start, end)    = parenthesisINDEX(tokens)
+            kakewari   = MultiplyAndDivide(tok)
+            tasihiki   = PlusAndMinus(kakewari)
+            inside     = {'type': 'NUMBER', 'number': tasihiki}
+            tokens[op] = inside                                 #Replace with answer
+            del tokens[(op+1):(cl+1)]                           #Delete used tokens
+            (start, end) = parenthesisINDEX(tokens)             #Re-index ()
     return tokens
 
 def evaluate(tokens):
-    kakko = parenthesis(tokens)
-    simplified = MultiplyAndDivide(kakko)
+    kakko      = parenthesis(tokens)                            #Get rid of parenthesis
+    simplified = MultiplyAndDivide(kakko)                       #Get rid of * and /
     return PlusAndMinus(simplified)
 
 while True:
